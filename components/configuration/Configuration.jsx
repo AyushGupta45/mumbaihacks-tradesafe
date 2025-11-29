@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { IoSettingsSharp } from "react-icons/io5";
-import ConfigurationModal from "../modals/ConfigurationModal";
+import ConfigurationModal from "../modals ConfigurationModal";
 import ConfigSkeleton from "../loaders/ConfigSkeleton";
 
 const ConfigurationCards = ({ data: initialData }) => {
@@ -58,7 +58,8 @@ const ConfigurationCards = ({ data: initialData }) => {
             : item
         )
       );
-    } catch (error) {
+    } catch (error) 
+    {
       console.error(error.message);
     }
   };
