@@ -1,0 +1,30 @@
+{
+  "opportunity": {
+    "id": "opp_test",
+    "symbol": "BTCUSDT",
+    "spreadPct": 1.2,
+    "action": "buy-binance-sell-india",
+    "estimatedGrossProfitPct": 0.9,
+    "binancePrice": 91000,
+    "indianPrice": 92100,
+    "firstSeenTs": 0,
+    "lastSeenTs": 0,
+    "persistenceCount": 3
+  },
+  "risk": {
+    "riskScore": 45,
+    "slippagePct": 0.5,
+    "volatilityPct": 0.3,
+    "liquidityEstimate": {
+      "fillableQty": 1.5,
+      "expectedAvgPrice": 92150
+    },
+    "notes": ["Medium risk scenario"]
+  },
+  "allocation": {
+    "allocationPct": 0.1,
+    "allocatedUSDT": 1000,
+    "reason": "Medium risk - moderate allocation (10%)"
+  },
+  "executeConfidenceThreshold": 0.6
+}

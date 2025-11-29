@@ -10,7 +10,7 @@ import {
 import { formatDate, formatDecimal } from "@/utils/functions";
 
 const PositionsTable = ({ trades }) => {
-  console.log(trades)
+  console.log("Trades asstes",trades)
   const openTrades = trades.filter((trade) => trade.exit === null);
   const displayedTrades = [...openTrades].reverse();
 

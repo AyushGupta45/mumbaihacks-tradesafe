@@ -1,0 +1,15 @@
+{
+  "opportunity": {
+    "id": "opp_test",
+    "symbol": "BTCUSDT",
+    "spreadPct": 1.2,
+    "action": "buy-binance-sell-india",
+    "estimatedGrossProfitPct": 0.9,
+    "binancePrice": 91000,
+    "indianPrice": 92100,
+    "firstSeenTs": 0,
+    "lastSeenTs": 0,
+    "persistenceCount": 1
+  },
+  "targetQuantity": 1
+}

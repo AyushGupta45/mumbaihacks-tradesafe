@@ -1,76 +1,80 @@
+// Coin definitions for market data
 export const coindata = [
   {
     symbol: "BTCUSDT",
     baseAsset: "BTC",
+    quoteAsset: "USDT",
     name: "Bitcoin",
   },
   {
     symbol: "ETHUSDT",
     baseAsset: "ETH",
+    quoteAsset: "USDT",
     name: "Ethereum",
-  },
-  {
-    symbol: "SOLUSDT",
-    baseAsset: "SOL",
-    name: "Solana",
-  },
-  {
-    symbol: "DOGEUSDT",
-    baseAsset: "DOGE",
-    name: "Dogecoin",
-  },
-  {
-    symbol: "TONUSDT",
-    baseAsset: "TON",
-    name: "Toncoin",
-  },
-  {
-    symbol: "TUSDUSDT",
-    baseAsset: "USDT",
-    name: "Tether",
   },
   {
     symbol: "BNBUSDT",
     baseAsset: "BNB",
-    name: "Binance",
+    quoteAsset: "USDT",
+    name: "Binance Coin",
   },
   {
-    symbol: "XRPUSDT",
-    baseAsset: "XRP",
-    name: "XRP",
+    symbol: "SOLUSDT",
+    baseAsset: "SOL",
+    quoteAsset: "USDT",
+    name: "Solana",
   },
   {
     symbol: "ADAUSDT",
     baseAsset: "ADA",
+    quoteAsset: "USDT",
     name: "Cardano",
   },
-];
-
-export const Indicators = {
-  RSI: {
-    name: "RSI",
-    description: "Relative Strength Index",
-    calcParams: [14],
+  {
+    symbol: "XRPUSDT",
+    baseAsset: "XRP",
+    quoteAsset: "USDT",
+    name: "Ripple",
   },
-  MACD: { name: "MACD", description: "Moving Average Convergence Divergence" },
-  VOL: { name: "VOL", description: "Volume" },
-  MA: { name: "MA", description: "Moving Average" },
-  EMA: { name: "EMA", description: "Exponential Moving Average" },
-  SMA: { name: "SMA", description: "Simple Moving Average" },
-  BOLL: { name: "BOLL", description: "Bollinger Bands" },
-  SAR: { name: "SAR", description: "Stop and Reverse" },
-  BBI: { name: "BBI", description: "Bull and Bear Index" },
-  KDJ: { name: "KDJ", description: "KDJ Index" },
-  OBV: { name: "OBV", description: "On Balance Volume" },
-};
-
-export const PrimaryIndicators = [
-  Indicators.MA,
-  Indicators.EMA,
-  Indicators.SMA,
-  Indicators.BOLL,
-  Indicators.SAR,
-  Indicators.BBI,
+  {
+    symbol: "DOGEUSDT",
+    baseAsset: "DOGE",
+    quoteAsset: "USDT",
+    name: "Dogecoin",
+  },
+  {
+    symbol: "DOTUSDT",
+    baseAsset: "DOT",
+    quoteAsset: "USDT",
+    name: "Polkadot",
+  },
+  {
+    symbol: "MATICUSDT",
+    baseAsset: "MATIC",
+    quoteAsset: "USDT",
+    name: "Polygon",
+  },
+  {
+    symbol: "AVAXUSDT",
+    baseAsset: "AVAX",
+    quoteAsset: "USDT",
+    name: "Avalanche",
+  },
 ];
 
-export const SecondaryIndicators = Object.values(Indicators);
+// Technical indicator definitions
+export const PrimaryIndicators = [
+  { name: "SMA", description: "Simple Moving Average" },
+  { name: "EMA", description: "Exponential Moving Average" },
+  { name: "Bollinger Bands", description: "Volatility indicator" },
+  { name: "VWAP", description: "Volume Weighted Average Price" },
+];
+
+export const SecondaryIndicators = [
+  { name: "RSI", description: "Relative Strength Index" },
+  { name: "MACD", description: "Moving Average Convergence Divergence" },
+  { name: "Stochastic", description: "Momentum indicator" },
+  { name: "Volume", description: "Trading volume" },
+  { name: "OBV", description: "On-Balance Volume" },
+];
+

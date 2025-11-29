@@ -7,21 +7,29 @@ export const useFetchTrades = () => {
   useEffect(() => {
     const fetchTrades = async () => {
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/account-info/get-trades`,
+        // Mock trades data - replace with actual API when available
+        const mockTrades = [
           {
-            cache: "no-store",
-          }
-        );
-
-        if (response.ok) {
-          const data = await response.json();
-          setTrades(data);
-        } else {
-          console.error("Failed to fetch balance");
-        }
+            id: 1,
+            symbol: "BTCUSDT",
+            side: "BUY",
+            price: "50000",
+            quantity: "0.5",
+            time: Date.now() - 3600000,
+          },
+          {
+            id: 2,
+            symbol: "ETHUSDT",
+            side: "SELL",
+            price: "3000",
+            quantity: "2.0",
+            time: Date.now() - 7200000,
+          },
+        ];
+        
+        setTrades(mockTrades);
       } catch (error) {
-        console.error("Error fetching balance:", error);
+        console.error("Error fetching trades:", error);
       }
     };
 
@@ -30,3 +38,4 @@ export const useFetchTrades = () => {
 
   return trades;
 };
+

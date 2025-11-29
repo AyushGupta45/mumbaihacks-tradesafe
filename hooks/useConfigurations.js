@@ -8,28 +8,23 @@ export const useConfigurations = () => {
   useEffect(() => {
     const fetchConfigurations = async () => {
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/config/get-configs`,
+        // Mock configurations - replace with actual API when available
+        const mockConfigs = [
           {
-            cache: "no-store",
-          }
-        );
+            base: "BTC",
+            quote: "USDT",
+            enabled: true,
+            image: getCryptoIcon("btc"),
+          },
+          {
+            base: "ETH",
+            quote: "USDT",
+            enabled: true,
+            image: getCryptoIcon("eth"),
+          },
+        ];
 
-        if (response.ok) {
-          const data = await response.json();
-
-          const mergedData = data.map((item) => {
-            const image = getCryptoIcon(item.base.toLowerCase());
-            return {
-              ...item,
-              image,
-            };
-          });
-
-          setData(mergedData);
-        } else {
-          console.error("Failed to fetch configurations");
-        }
+        setData(mockConfigs);
       } catch (error) {
         console.error("Error fetching configurations:", error);
       }
@@ -40,3 +35,4 @@ export const useConfigurations = () => {
 
   return data;
 };
+

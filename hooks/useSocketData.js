@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
-import { io } from "socket.io-client";
 
-const socket = io(`${process.env.NEXT_PUBLIC_BACKEND_URL}`);
-
-const useSocketData = (symbol, interval = "1d") => {
+const useSocketData = (symbol, interval = "1m") => {
   const [klineData, setKlineData] = useState([]);
   const [dataFrame, setDataFrame] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,44 +12,99 @@ const useSocketData = (symbol, interval = "1d") => {
     setDataFrame([]);
     setLoading(true);
 
-    socket.emit("unsubscribeFromSymbol", { symbol });
-    socket.emit("subscribeToSymbol", { symbol, interval });
+    // Convert symbol to Binance format (e.g., BTCUSDT)
+    const binanceSymbol = symbol.replace("/", "").toLowerCase();
+    
+    // Connect to Binance WebSocket
+    const wsUrl = `wss://stream.binance.com:9443/ws/${binanceSymbol}@kline_${interval}`;
+    const ws = new WebSocket(wsUrl);
 
-    const handleKlineData = (data) => {
-      if (data.history) {
-        setKlineData(data.history);
-        setDataFrame(data.history);
+    // Fetch historical data first
+    const fetchHistoricalData = async () => {
+      try {
+        const response = await fetch(
+          `https://api.binance.com/api/v3/klines?symbol=${symbol.replace("/", "")}&interval=${interval}&limit=100`
+        );
+        const data = await response.json();
+        
+        const formattedData = data.map(candle => ({
+          timestamp: candle[0],
+          open: parseFloat(candle[1]),
+          high: parseFloat(candle[2]),
+          low: parseFloat(candle[3]),
+          close: parseFloat(candle[4]),
+          volume: parseFloat(candle[5]),
+        }));
+
+        setKlineData(formattedData);
+        setDataFrame(formattedData);
         setLoading(false);
-      } else if (data.newPoint) {
-        setKlineData((prevData) => {
-          const newData = [...prevData];
-          const newPointDate = new Date(data.newPoint.timestamp).toDateString();
-          const lastCandle = newData[newData.length - 1];
-          const lastCandleDate = lastCandle
-            ? new Date(lastCandle.timestamp).toDateString()
-            : null;
-
-          if (lastCandle && lastCandleDate === newPointDate) {
-            lastCandle.close = data.newPoint.close;
-            lastCandle.high = Math.max(lastCandle.high, data.newPoint.high);
-            lastCandle.low = Math.min(lastCandle.low, data.newPoint.low);
-            lastCandle.volume = data.newPoint.volume; // Replace volume
-          } else {
-            newData.push(data.newPoint);
-          }
-
-          return newData;
-        });
-
-        setDataFrame((prevData) => [...prevData, data.newPoint]);
+      } catch (error) {
+        console.error("Error fetching historical data:", error);
+        setLoading(false);
       }
     };
 
-    socket.on("klineData", handleKlineData);
+    fetchHistoricalData();
+
+    ws.onopen = () => {
+      console.log(`WebSocket connected for ${symbol}`);
+    };
+
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        
+        if (data.e === "kline") {
+          const kline = data.k;
+          
+          const newPoint = {
+            timestamp: kline.t,
+            open: parseFloat(kline.o),
+            high: parseFloat(kline.h),
+            low: parseFloat(kline.l),
+            close: parseFloat(kline.c),
+            volume: parseFloat(kline.v),
+          };
+
+          setKlineData((prevData) => {
+            const newData = [...prevData];
+            const lastCandle = newData[newData.length - 1];
+
+            // If candle is closed, add new one
+            if (kline.x) {
+              newData.push(newPoint);
+            } else if (lastCandle && lastCandle.timestamp === newPoint.timestamp) {
+              // Update existing candle
+              newData[newData.length - 1] = newPoint;
+            } else {
+              // Add new candle
+              newData.push(newPoint);
+            }
+
+            // Keep only last 200 candles
+            return newData.slice(-200);
+          });
+
+          setDataFrame((prevData) => [...prevData.slice(-200), newPoint]);
+        }
+      } catch (error) {
+        console.error("Error parsing WebSocket data:", error);
+      }
+    };
+
+    ws.onerror = (error) => {
+      console.error(`WebSocket error for ${symbol}:`, error);
+    };
+
+    ws.onclose = () => {
+      console.log(`WebSocket closed for ${symbol}`);
+    };
 
     return () => {
-      socket.emit("unsubscribeFromSymbol", { symbol });
-      socket.off("klineData", handleKlineData);
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      }
     };
   }, [symbol, interval]);
 
