@@ -10,7 +10,9 @@ export default function AppSidebar() {
   return (
     <div className="flex h-full w-64 flex-col bg-sidebar text-sidebar-foreground">
       <div className="p-4">
-        <p className="text-sm text-muted-foreground">Placeholder Sidebar Component</p>
+        <p className="text-sm text-muted-foreground">
+          Placeholder Sidebar Component
+        </p>
       </div>
     </div>
   );

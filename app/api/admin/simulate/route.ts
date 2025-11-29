@@ -1,19 +1,19 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { updateSettings, getSettings } from '@/lib/state/settings';
-import { setRunnerSymbols } from '@/lib/agents/runner';
+import { NextRequest, NextResponse } from "next/server";
+import { updateSettings, getSettings } from "@/lib/state/settings";
+import { setRunnerSymbols } from "@/lib/agents/runner";
 
 // Global simulation state
 let simulationState = {
   indianDriftOverride: null as number | null,
   exchangeOutages: [] as string[],
-  pollIntervalOverride: null as number | null
+  pollIntervalOverride: null as number | null,
 };
 
 /**
  * GET /api/admin/simulate
- * 
+ *
  * Admin controls for runtime simulation adjustments
- * 
+ *
  * Query params:
  * - drift: Set Indian exchange drift (e.g., 0.02 for 2%)
  * - outage: Simulate exchange outage (e.g., 'india', 'binance', 'nse')
@@ -23,11 +23,11 @@ let simulationState = {
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const drift = searchParams.get('drift');
-    const outage = searchParams.get('outage');
-    const clearOutage = searchParams.get('clearOutage');
-    const pollMs = searchParams.get('pollMs');
-    
+    const drift = searchParams.get("drift");
+    const outage = searchParams.get("outage");
+    const clearOutage = searchParams.get("clearOutage");
+    const pollMs = searchParams.get("pollMs");
+
     const changes: string[] = [];
 
     // Handle drift override
@@ -36,13 +36,13 @@ export async function GET(request: NextRequest) {
       if (!isNaN(driftValue)) {
         simulationState.indianDriftOverride = driftValue;
         changes.push(`Indian drift set to ${(driftValue * 100).toFixed(2)}%`);
-        
+
         // Update settings for Indian exchange
         updateSettings({
           indianExchange: {
             ...getSettings().indianExchange,
-            priceDriftPercent: driftValue
-          }
+            priceDriftPercent: driftValue,
+          },
         });
       }
     }
@@ -79,15 +79,16 @@ export async function GET(request: NextRequest) {
       success: true,
       changes,
       currentState: simulationState,
-      message: changes.length > 0 ? 'Simulation state updated' : 'No changes made'
+      message:
+        changes.length > 0 ? "Simulation state updated" : "No changes made",
     });
   } catch (error) {
-    console.error('Admin simulate error:', error);
+    console.error("Admin simulate error:", error);
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to update simulation state',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        error: "Failed to update simulation state",
+        details: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }
     );
@@ -96,36 +97,39 @@ export async function GET(request: NextRequest) {
 
 /**
  * POST /api/admin/simulate
- * 
+ *
  * Reset all simulation overrides
  */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json().catch(() => ({}));
-    
+
     if (body.reset === true) {
       simulationState = {
         indianDriftOverride: null,
         exchangeOutages: [],
-        pollIntervalOverride: null
+        pollIntervalOverride: null,
       };
-      
+
       return NextResponse.json({
         success: true,
-        message: 'All simulation overrides reset',
-        currentState: simulationState
+        message: "All simulation overrides reset",
+        currentState: simulationState,
       });
     }
 
-    return NextResponse.json({
-      success: false,
-      message: 'Invalid request. Use {reset: true} to reset'
-    }, { status: 400 });
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Invalid request. Use {reset: true} to reset",
+      },
+      { status: 400 }
+    );
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to reset simulation state'
+        error: "Failed to reset simulation state",
       },
       { status: 500 }
     );

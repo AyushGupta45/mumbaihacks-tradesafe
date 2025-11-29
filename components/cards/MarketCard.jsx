@@ -14,7 +14,10 @@ const MarketCard = ({ marketData }) => {
   return (
     <div className="flex flex-wrap justify-start gap-8">
       {marketData.map((crypto) => (
-        <Card key={crypto.symbol} className="shadow-lg rounded-lg p-4 w-[380px]">
+        <Card
+          key={crypto.symbol}
+          className="shadow-lg rounded-lg p-4 w-[380px]"
+        >
           <Link href={`/markets/${crypto.symbol}`}>
             <CardHeader className="flex flex-row items-center p-0 mb-3 gap-4">
               <Image
@@ -24,7 +27,7 @@ const MarketCard = ({ marketData }) => {
                 height={48}
                 className="w-12 h-12 object-contain"
               />
-             <div className="flex flex-col items-start gap-1">
+              <div className="flex flex-col items-start gap-1">
                 <CardTitle className="flex flex-row text-3xl font-extrabold text-gray-800 gap-2">
                   <p>{crypto.name}</p>
                   <div className="flex flex-row items-end justify-start">
@@ -41,10 +44,10 @@ const MarketCard = ({ marketData }) => {
                         : "bg-red-500"
                     }`}
                   >
-                    {crypto.priceChangePercentage24h 
-                      ? (crypto.priceChangePercentage24h > 0
+                    {crypto.priceChangePercentage24h
+                      ? crypto.priceChangePercentage24h > 0
                         ? `+${crypto.priceChangePercentage24h.toFixed(2)}%`
-                        : `${crypto.priceChangePercentage24h.toFixed(2)}%`)
+                        : `${crypto.priceChangePercentage24h.toFixed(2)}%`
                       : "0.00%"}
                   </div>
                 </div>
@@ -58,12 +61,17 @@ const MarketCard = ({ marketData }) => {
                     : "text-red-500"
                 }`}
               >
-                ${parseFloat(crypto.price || crypto.currentPrice || 0).toLocaleString()}
+                $
+                {parseFloat(
+                  crypto.price || crypto.currentPrice || 0
+                ).toLocaleString()}
               </div>
               <SimpleLineChart
                 historicalData={crypto.historicalData || []}
                 color={
-                  (crypto.priceChangePercentage24h || 0) > 0 ? "#10b981" : "#ef4444"
+                  (crypto.priceChangePercentage24h || 0) > 0
+                    ? "#10b981"
+                    : "#ef4444"
                 }
               />
             </CardContent>

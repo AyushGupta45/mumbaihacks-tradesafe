@@ -22,19 +22,19 @@ const AdvancedChart = ({ data, symbol }) => {
     const isDark = theme === "dark";
     // Try setStyleOptions for v8 compatibility
     if (chart.setStyleOptions) {
-        chart.setStyleOptions({
-            grid: {
-                horizontal: { color: isDark ? "#333" : "#eee" },
-                vertical: { color: isDark ? "#333" : "#eee" },
-            },
-            candle: {
-                bar: {
-                    upColor: "#10b981",
-                    downColor: "#ef4444",
-                    noChangeColor: "#888888",
-                },
-            },
-        });
+      chart.setStyleOptions({
+        grid: {
+          horizontal: { color: isDark ? "#333" : "#eee" },
+          vertical: { color: isDark ? "#333" : "#eee" },
+        },
+        candle: {
+          bar: {
+            upColor: "#10b981",
+            downColor: "#ef4444",
+            noChangeColor: "#888888",
+          },
+        },
+      });
     }
 
     return () => {
@@ -50,7 +50,7 @@ const AdvancedChart = ({ data, symbol }) => {
   useEffect(() => {
     if (chartInstanceRef.current && data && data.length > 0) {
       // Map data to klinecharts format
-      const klineData = data.map(item => ({
+      const klineData = data.map((item) => ({
         timestamp: item.timestamp || item.time,
         open: item.open,
         high: item.high,
@@ -61,27 +61,27 @@ const AdvancedChart = ({ data, symbol }) => {
 
       // If it's a new symbol or first load, apply all data
       const currentDataList = chartInstanceRef.current.getDataList();
-      
+
       if (currentDataList.length === 0 || symbol !== currentSymbolRef.current) {
-          chartInstanceRef.current.applyNewData(klineData);
-          currentSymbolRef.current = symbol;
+        chartInstanceRef.current.applyNewData(klineData);
+        currentSymbolRef.current = symbol;
       } else {
-          // Update the last candle or append new one
-          const lastData = klineData[klineData.length - 1];
-          chartInstanceRef.current.updateData(lastData);
+        // Update the last candle or append new one
+        const lastData = klineData[klineData.length - 1];
+        chartInstanceRef.current.updateData(lastData);
       }
     }
   }, [data, symbol]);
 
   useEffect(() => {
     if (chartInstanceRef.current) {
-        if (chartInstanceRef.current.setStyleOptions) {
-             chartInstanceRef.current.setStyleOptions({
-                candle: {
-                type: chartType,
-                },
-            });
-        }
+      if (chartInstanceRef.current.setStyleOptions) {
+        chartInstanceRef.current.setStyleOptions({
+          candle: {
+            type: chartType,
+          },
+        });
+      }
     }
   }, [chartType]);
 
@@ -98,7 +98,7 @@ const AdvancedChart = ({ data, symbol }) => {
               onClick={() => setChartType(type.value)}
               className={`px-3 py-1 rounded-md text-xs font-medium transition-all ${
                 chartType === type.value
-                  ? "bg-blue-500 text-white shadow-lg" 
+                  ? "bg-blue-500 text-white shadow-lg"
                   : "text-zinc-400 hover:text-white hover:bg-white/5"
               }`}
             >
